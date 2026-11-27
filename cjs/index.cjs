@@ -40,6 +40,9 @@ const { nodeResolve } = require('@aarivbuildz/urlguard/runtime/node');
 const DEFAULT_CONTEXT_KEY = 'appsec';
 const DEFAULT_JSON_METHODS = Object.freeze(['POST', 'PUT', 'PATCH', 'DELETE']);
 const DEFAULT_JSON_CONTENT_TYPES = Object.freeze(['application/json']);
+// Fastify tests RegExp parsers against the content type including parameters, so allow an
+// optional parameter list after the media type while keeping both ends anchored.
+const FASTIFY_JSON_SUFFIX_TYPE = /^application\/[^\s/;]+\+json\s*(?:;|$)/i;
 const DEFAULT_WEBHOOK_MAX_BODY_BYTES = 262144;
 
 function hasOwn(object, key) {
@@ -866,16 +869,21 @@ function registerFastifyJsonParser(fastify, jsonInput) {
       // Older Fastify versions either do not need removal or override the default parser.
     }
   }
-  fastify.addContentTypeParser('application/json', {
+  const parserOptions = {
     parseAs: 'buffer',
     bodyLimit: feature.cage.options.maxBytes
-  }, function parseJsonWithCage(request, body, done) {
+  };
+  function parseJsonWithCage(request, body, done) {
     try {
       done(null, feature.cage.parseBytes(body));
     } catch (error) {
       done(error);
     }
-  });
+  }
+  fastify.addContentTypeParser('application/json', parserOptions, parseJsonWithCage);
+  if (feature.allowJsonSuffix) {
+    fastify.addContentTypeParser(FASTIFY_JSON_SUFFIX_TYPE, parserOptions, parseJsonWithCage);
+  }
   return true;
 }
 
