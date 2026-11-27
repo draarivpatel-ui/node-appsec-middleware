@@ -293,7 +293,7 @@ export interface FastifyReplyLike {
 
 export interface FastifyLike {
   addHook(name: 'onRequest', hook: (request: FastifyRequestLike, reply: FastifyReplyLike, done: (error?: unknown) => void) => void): unknown;
-  addContentTypeParser?(type: string, options: Record<string, unknown>, parser: (request: unknown, body: unknown, done: (error?: unknown, value?: unknown) => void) => void): unknown;
+  addContentTypeParser?(type: string | RegExp, options: Record<string, unknown>, parser: (request: unknown, body: unknown, done: (error?: unknown, value?: unknown) => void) => void): unknown;
   removeContentTypeParser?(type: string): unknown;
 }
 
