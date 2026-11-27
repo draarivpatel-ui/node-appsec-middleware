@@ -1,0 +1,65 @@
+{
+  "name": "node-appsec-middleware",
+  "version": "1.0.0",
+  "description": "Drop-in Node.js, Express, Fastify, and Koa security middleware built from focused zero dependency packages",
+  "type": "module",
+  "main": "cjs/index.cjs",
+  "module": "src/index.mjs",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.mjs",
+      "require": "./cjs/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "cjs",
+    "types",
+    "examples",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:cjs": "node scripts/check-cjs.cjs",
+    "check:types": "node scripts/check-types.mjs",
+    "check:examples": "node scripts/check-examples.mjs",
+    "verify": "npm test && npm run test:cjs && npm run check:types && npm run check:examples"
+  },
+  "keywords": [
+    "security",
+    "appsec",
+    "middleware",
+    "express",
+    "fastify",
+    "koa",
+    "nodejs",
+    "typescript",
+    "owasp",
+    "devsecops"
+  ],
+  "author": "draarivpatel-ui",
+  "license": "MIT",
+  "dependencies": {
+    "@aarivbuildz/csrfshield": "1.0.1",
+    "@aarivbuildz/hookverify": "1.0.1",
+    "@aarivbuildz/jwtguard": "1.0.1",
+    "@aarivbuildz/urlguard": "0.1.0",
+    "cookiecage": "1.0.0",
+    "corscage": "1.0.0",
+    "envcage": "1.0.0",
+    "headersafe": "1.0.1",
+    "jsoncage": "1.0.0",
+    "logcage": "1.0.0",
+    "pathcage": "1.0.1",
+    "redirectcage": "1.0.0",
+    "zipcage": "1.0.0"
+  }
+}
