@@ -40,3 +40,5 @@ jobs:
         run: node scripts/check-types.mjs
       - name: Check examples
         run: node scripts/check-examples.mjs
+      - name: Smoke test native HTTP example
+        run: node scripts/smoke-http.mjs

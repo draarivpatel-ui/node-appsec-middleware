@@ -31,7 +31,7 @@
     "test:cjs": "node scripts/check-cjs.cjs",
     "check:types": "node scripts/check-types.mjs",
     "check:examples": "node scripts/check-examples.mjs",
-    "verify": "npm test && npm run test:cjs && npm run check:types && npm run check:examples"
+    "verify": "npm test && npm run test:cjs && npm run check:types && npm run check:examples && node scripts/smoke-http.mjs"
   },
   "keywords": [
     "security",
