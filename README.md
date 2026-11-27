@@ -144,7 +144,7 @@ fastify.get('/go', async (request, reply) => {
 await fastify.listen({ port: 3000 });
 ```
 
-The plugin installs a strict `application/json` parser. Fastify owns body parsing, while the plugin still applies headers, CORS, cookies, redirects, CSRF, URL validation, and redacted logging through `request.raw` and `reply.raw`.
+The plugin installs a strict `application/json` parser and, unless `json.allowJsonSuffix` is `false`, the same strict parser for `application/*+json` media types such as `application/problem+json`. Exact-match Fastify parsers registered for a specific suffix type still take precedence over the suffix parser. Fastify owns body parsing, while the plugin still applies headers, CORS, cookies, redirects, CSRF, URL validation, and redacted logging through `request.raw` and `reply.raw`.
 
 ## Koa
 
