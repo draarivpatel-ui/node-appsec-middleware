@@ -1,5 +1,7 @@
 # node-appsec-middleware
 
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/draarivpatel-ui/node-appsec-middleware/badge)](https://scorecard.dev/viewer/?uri=github.com/draarivpatel-ui/node-appsec-middleware)
+
 Drop-in HTTP security middleware for Node.js, Express, Fastify, and Koa. It composes thirteen focused, zero dependency security packages behind one small API.
 
 The package has no Express, Fastify, or Koa runtime dependency. It works directly with the request and response objects those frameworks already provide.
