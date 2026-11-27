@@ -27,7 +27,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs",
+    "test": "node scripts/run-tests.mjs",
     "test:cjs": "node scripts/check-cjs.cjs",
     "check:types": "node scripts/check-types.mjs",
     "check:examples": "node scripts/check-examples.mjs",
