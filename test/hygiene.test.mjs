@@ -39,7 +39,7 @@ test('repo hygiene has no private paths, mailbox fragments, coauthor trailers, o
   }
 });
 
-test('dependency surface is exactly the thirteen live security packages', async () => {
+test('dependency surface is exactly the thirteen live runtime security packages', async () => {
   const packageJson = JSON.parse(await fs.readFile(path.join(root, 'package.json'), 'utf8'));
   const dependencies = Object.keys(packageJson.dependencies || {}).sort();
   assert.deepEqual(dependencies, [
@@ -57,8 +57,37 @@ test('dependency surface is exactly the thirteen live security packages', async 
     'redirectcage',
     'zipcage'
   ]);
-  assert.equal(Object.keys(packageJson.devDependencies || {}).length, 0);
+  const devDependencies = Object.keys(packageJson.devDependencies || {}).sort();
+  assert.ok(devDependencies.includes('fast-check'));
+  for (const name of devDependencies) {
+    assert.equal(packageJson.dependencies[name], undefined, `${name} must stay development-only`);
+  }
+
   const lock = JSON.parse(await fs.readFile(path.join(root, 'package-lock.json'), 'utf8'));
+  const packageName = (key) => {
+    const parts = key.split('/');
+    return key.includes('node_modules/@') ? parts.slice(-2).join('/') : parts.at(-1);
+  };
   const installed = Object.keys(lock.packages).filter((name) => name.startsWith('node_modules/'));
-  assert.equal(installed.length, 13);
+  const runtimeNames = new Set(dependencies);
+  const devClosure = new Set(devDependencies);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const key of installed) {
+      if (!devClosure.has(packageName(key))) continue;
+      for (const dependency of Object.keys(lock.packages[key].dependencies || {})) {
+        if (!devClosure.has(dependency)) {
+          devClosure.add(dependency);
+          grew = true;
+        }
+      }
+    }
+  }
+  for (const key of installed) {
+    const name = packageName(key);
+    assert.ok(runtimeNames.has(name) || devClosure.has(name), `${name} is outside the runtime or development-only closure`);
+    if (runtimeNames.has(name)) assert.deepEqual(lock.packages[key].dependencies || {}, {}, `${name} must stay zero-dependency at runtime`);
+  }
+  assert.equal(installed.filter((key) => runtimeNames.has(packageName(key))).length, 13);
 });
